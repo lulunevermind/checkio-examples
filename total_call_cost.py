@@ -1,4 +1,5 @@
 from datetime import datetime
+from collections import Counter
 from math import ceil
 from itertools import groupby
 
@@ -17,28 +18,18 @@ def total_cost(calls):
         date_objects.append((clear_date, how_long_in_minutes))
     for i, groups in groupby(date_objects, key=lambda x: x[0].day):
         quote = 0
+        max_quote = 100
         for date, how_long in groups:
-            remains = 100 - quote if quote <= 100 else 0
             quote += how_long
-            if quote >= 100 and how_long >= 100:
-                total += remains*price_1_pm + (how_long - remains)*price_2_pm
-            if quote >= 100 and how_long < 100:
-                total += how_long*price_2_pm
-            if quote < 100:
-                total += how_long * price_1_pm
+        total += quote*price_1_pm if quote < 100 else max_quote*price_1_pm + (quote-max_quote)*price_2_pm
     return total
 
 
 if __name__ == '__main__':
-    print(total_cost(("2057-01-01 00:00:00 7200",
-"2057-01-01 03:00:00 7200",
-"2057-01-01 06:00:00 7200",
-"2057-01-01 09:00:00 7200",
-"2057-01-01 12:00:00 7200",
-"2057-01-01 15:00:00 7200",
-"2057-01-01 18:00:00 7200",
-"2057-01-01 21:00:00 7200",
-"2057-01-01 23:10:00 7200")))
+    print(total_cost(("2014-01-01 01:12:13 181",
+                       "2014-01-02 20:11:10 600",
+                       "2014-01-03 01:12:13 6009",
+                       "2014-01-03 12:13:55 200")))
     #These "asserts" using only for self-checking and not necessary for auto-testing
     # assert total_cost(("2014-01-01 01:12:13 181",
     #                    "2014-01-02 20:11:10 600",
