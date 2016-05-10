@@ -2,29 +2,19 @@
 
 
 def checkio(pattern, image):
-
-    def explore(arr, combination, i, j):
-        for rcount, row in enumerate(combination):
-            for count, item in enumerate(row):
-                # print(arr[i+rcount][j+count])
-                if arr[i + rcount][j + count] != item:
-                    return False
-        return True
-
-    def mark(arr, combination, i, j):
-        for rcount, row in enumerate(combination):
-            for count, item in enumerate(row):
-                arr[i + rcount][j + count] = 3 if arr[i + rcount][j + count] == 1 else 2
-        return True
-
-    def find_combination_in_arr(arr, combination, ):
-        for i, row in enumerate(arr):
-            for j, item in enumerate(row):
-                if item == combination[0][0] and len(arr[0]) - j >= len(combination[0]) and len(arr) - i >= len(combination):
-                    if explore(arr, combination, i, j):
-                        mark(arr, combination, i, j)
-        return arr
-    return find_combination_in_arr(image, pattern)
+    for y in range(len(image)-len(pattern)+1):
+        for x in range(len(image[0])-len(pattern[0])+1):
+            same = True
+            for dy in range(len(pattern)):
+                for dx in range(len(pattern[0])):
+                    if pattern[dy][dx]%2 != image[y+dy][x+dx]:
+                        same = False
+            if same:
+                print(x, y)
+                for dy in range(len(pattern)):
+                    for dx in range(len(pattern[0])):
+                        image[y + dy][x + dx] = (image[y + dy][x + dx]%2) + 2
+    return image
 
 #These "asserts" using only for self-checking and not necessary for auto-testing
 if __name__ == '__main__':
